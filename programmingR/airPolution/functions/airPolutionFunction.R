@@ -2,9 +2,9 @@ library(stringr)
 
 
 ##
-#
+# 
 ##
-getPollutantMatrics <- function(directory, id=1:332) {
+getPollutantMatrics <- function(directory="/Users/zhiyin/workspace/coursera/datasciencecoursera/programmingR/airPolution/specdata", id=1:332) {
     
     matrices <- matrix(ncol=4, nrow=0)
     
@@ -25,3 +25,11 @@ pollutantMean <- function(directory="/Users/zhiyin/workspace/coursera/datascienc
     mean(matrices[, pollutant], na.rm = TRUE)
 }
 
+complete <- function(directory="/Users/zhiyin/workspace/coursera/datasciencecoursera/programmingR/airPolution/specdata", 
+                     id=1:332) {
+    
+    matrices <- getPollutantMatrics(directory, id)
+    complete <- matrices[complete.cases(matrices[,2:3]),]
+    l = split(complete, complete$ID)
+    sapply(l, nrow)
+}
