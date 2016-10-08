@@ -1,9 +1,5 @@
 library(stringr)
 
-
-##
-# 
-##
 getPollutantMatrics <- function(directory="/Users/zhiyin/workspace/coursera/datasciencecoursera/programmingR/airPolution/specdata", id=1:332) {
     
     matrices <- matrix(ncol=4, nrow=0)
@@ -32,4 +28,22 @@ complete <- function(directory="/Users/zhiyin/workspace/coursera/datasciencecour
     complete <- matrices[complete.cases(matrices[,2:3]),]
     l = split(complete, complete$ID)
     sapply(l, nrow)
+}
+
+corr <- function(directory="/Users/zhiyin/workspace/coursera/datasciencecoursera/programmingR/airPolution/specdata", 
+                 threashold = 0, id=1:332) {
+    
+    matrices <- getPollutantMatrics(directory, id)
+    complete <- matrices[complete.cases(matrices[,2:3]),]
+    l = split(complete, complete$ID)
+    
+    final <- sapply(l, function(x){
+        v = vector('numeric')
+        if (nrow(x) > threashold) {
+            v <- c(v, cor(x[,'sulfate'], x[, 'nitrate']))
+        }
+        v
+    })
+    
+    final
 }
