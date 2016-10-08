@@ -38,12 +38,10 @@ corr <- function(directory="/Users/zhiyin/workspace/coursera/datasciencecoursera
     l = split(complete, complete$ID)
     
     final <- sapply(l, function(x){
-        v = vector('numeric')
         if (nrow(x) > threashold) {
-            v <- c(v, cor(x[,'sulfate'], x[, 'nitrate']))
+            cor(x[,'sulfate'], x[, 'nitrate'])
         }
-        v
     })
-    
-    final
+
+    final[!sapply(final, is.null)]
 }
