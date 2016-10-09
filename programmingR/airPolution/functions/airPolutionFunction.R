@@ -26,8 +26,17 @@ complete <- function(directory="/Users/zhiyin/workspace/coursera/datasciencecour
     
     matrices <- getPollutantMatrics(directory, id)
     complete <- matrices[complete.cases(matrices[,2:3]),]
-    l = split(complete, complete$ID)
-    sapply(l, nrow)
+    
+    l <- split(complete, complete$ID)
+    l <- lapply(l, nrow)
+    
+    l
+    
+    #print(l)
+    #print(l2)
+    #df <- as.data.frame(l)
+   # colnames(df) <- c("id", "nobs")
+    #df
 }
 
 corr <- function(directory="/Users/zhiyin/workspace/coursera/datasciencecoursera/programmingR/airPolution/specdata", 
