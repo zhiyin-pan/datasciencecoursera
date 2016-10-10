@@ -106,20 +106,25 @@ rankall <- function(outcome, num = "best") {
     
     sortByRate <- function(x) {
         if (num == 'worst') {
+            # print ('descending')
             # descending order on outcome. 
             sorted <- na.omit(arrange(x, desc(x[, outcome]), x[, 'Hospital.Name']))
         }
         else {
             # ascending order.
+            # print ('ascending')
             sorted <- na.omit(arrange(x, x[, outcome], x[, 'Hospital.Name']))
         }
-        sorted[ranking,c('Hospital.Name', 'State')]
+        #print (ranking)
+        #print (head(sorted[]),3)
+        #print (sorted[ranking,])
+        sorted[ranking, c('Hospital.Name', 'State')]
     }
 
+    # split by state 
     l <- split(data, data$State)
-    l2 <- sapply(l, sortByRate)
     
-    l2
-    # print(sorted)
+    # apply sortByRate on every state. return it as a data frame, but transpose it first.
+    t(as.data.frame(sapply(l, sortByRate)))
 }
 
