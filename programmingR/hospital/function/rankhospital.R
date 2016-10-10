@@ -42,11 +42,6 @@
 library(dplyr)
 
 rankhospital <- function(state, outcome, num = "best") {
-    ## Check that state is valid
-    if (!state %in% rawdata$State) {
-        stop("invalid state")
-    }
-    
     ## Check that outcome is valid
     if( !outcome %in% condition) {
         stop("invalid outcome")
@@ -67,6 +62,10 @@ rankhospital <- function(state, outcome, num = "best") {
     ## Read outcome data
     rawdata <- read.csv("outcome-of-care-measures.csv", colClasses = "character")
     condition <- c("heart attack", "heart failure", "pneumonia")
+    ## Check that state is valid
+    if (!state %in% rawdata$State) {
+        stop("invalid state")
+    }
     
     ## clean up the table to only contain 6 variables needed. 
     columns = c('Provider.Number',
@@ -100,5 +99,6 @@ rankhospital <- function(state, outcome, num = "best") {
     
     # print(sorted)
     sorted[ranking,'Hospital.Name']
+    sorted
 }
 
