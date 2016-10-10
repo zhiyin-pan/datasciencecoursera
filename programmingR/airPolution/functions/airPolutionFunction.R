@@ -30,6 +30,8 @@ complete <- function(directory="/Users/zhiyin/workspace/coursera/datasciencecour
     l <- split(complete, complete$ID)
     l <- lapply(l, nrow)
     
+    m <- tapply()
+    tapply(mtcars$mpg,mtcars$cyl,mean)
     l
     
     #print(l)
