@@ -42,11 +42,6 @@
 library(dplyr)
 
 rankhospital <- function(state, outcome, num = "best") {
-    
-    ## Read outcome data
-    rawdata <- read.csv("outcome-of-care-measures.csv", colClasses = "character")
-    condition <- c("heart attack", "heart failure", "pneumonia")
-    
     ## Check that state is valid
     if (!state %in% rawdata$State) {
         stop("invalid state")
@@ -57,8 +52,25 @@ rankhospital <- function(state, outcome, num = "best") {
         stop("invalid outcome")
     }
     
-    ## clean up the table to only contain 5 variables needed. 
-    columns = c('Hospital.Name', 
+    ## check num is either "best" or "worst" or an integer 
+    if ( (!is.numeric(num)) && num != 'best' && num != 'worst') {
+        stop("invalid ranking")
+    }
+    
+    if (num == 'best' || num == 'worst') {
+        ranking <- 1
+    }
+    else {
+        ranking <- as.integer(num)
+    }
+    
+    ## Read outcome data
+    rawdata <- read.csv("outcome-of-care-measures.csv", colClasses = "character")
+    condition <- c("heart attack", "heart failure", "pneumonia")
+    
+    ## clean up the table to only contain 6 variables needed. 
+    columns = c('Provider.Number',
+                'Hospital.Name', 
                 'State', 
                 'Hospital.30.Day.Death..Mortality..Rates.from.Heart.Attack', 
                 'Hospital.30.Day.Death..Mortality..Rates.from.Heart.Failure', 
@@ -69,24 +81,24 @@ rankhospital <- function(state, outcome, num = "best") {
     data <- subset(data, State == state)
     
     ## make column 3-5 numeric
-    data[,3:5] = suppressWarnings(lapply(data[,3:5], function(x) as.numeric(x)))
+    data[,4:6] = suppressWarnings(lapply(data[,4:6], function(x) as.numeric(x)))
     
     ## rename column 3-5 to be the same as the condition passed in, for easy processing. 
-    names(data)[3:5] <- condition
+    names(data)[4:6] <- condition
     
     ## sort by the passed in outcome, and also the hostpical name. 
     ## sort is too expensive, better to improve it by getting all the rows with the min
     ## and then sort by hostpical name. 
-    sorted <- arrange(data, data[, outcome], data[, 'Hospital.Name'])
+    if (num == 'worst') {
+        # descending order on outcome. 
+        sorted <- na.omit(arrange(data, desc(data[, outcome]), data[, 'Hospital.Name']))
+    }
+    else {
+        # ascending order.
+        sorted <- na.omit(arrange(data, data[, outcome], data[, 'Hospital.Name']))
+    }
     
-    ## rate
-    sorted[1, 'Hospital.Name']
-    
-    
-    
-    ## Read outcome data
-    ## Check that state and outcome are valid
-    ## Return hospital name in that state with the given rank
-    ## 30-day death rate
+    # print(sorted)
+    sorted[ranking,'Hospital.Name']
 }
 

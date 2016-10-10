@@ -73,7 +73,7 @@ best <- function(state, outcome) {
     ## sort by the passed in outcome, and also the hostpical name. 
     ## sort is too expensive, better to improve it by getting all the rows with the min
     ## and then sort by hostpical name. 
-    sorted <- arrange(data, data[, outcome], data[, 'Hospital.Name'])
+    sorted <- na.omit(arrange(data, data[, outcome], data[, 'Hospital.Name']))
     
     ## rate
     sorted[1, 'Hospital.Name']
